@@ -18,8 +18,10 @@ require __DIR__ . '/../vendor/autoload.php';
 
     $app->get('/item/{path}', function (Request $request, Response $response, $args) {
         $path = $args['path'];
-        
+         
         $market = new InfoMarket();
+        $market->installMarketeer(Uptime::class);
+        
         $data = $market->readItem($path);
         $response->getBody()->write($data);
         return $response->withHeader('Content-Type', 'application/json');
@@ -29,7 +31,7 @@ require __DIR__ . '/../vendor/autoload.php';
         $path = $args['path'];
             
         $market = new InfoMarket();
-        $market->installMarketeer(Uptime::class);
+        
         
         $data = $market->readItem($path);
         $response->getBody()->write($data);
