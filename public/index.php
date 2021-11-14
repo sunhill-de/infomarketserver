@@ -4,7 +4,9 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
 use Sunhill\InfoMarket\Market\InfoMarket;
 
-use Sunhill\InfoMarket\Marketeers\System\Uptime;
+use Sunhill\InfoMarket\Marketeers\System\System;
+use Sunhill\InfoMarket\Marketeers\System\Disk;
+use Sunhill\InfoMarket\Marketeers\System\CPU;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -20,7 +22,9 @@ require __DIR__ . '/../vendor/autoload.php';
         $path = $args['path'];
          
         $market = new InfoMarket();
-        $market->installMarketeer(Uptime::class);
+        $market->installMarketeer(System::class);
+        $market->installMarketeer(CPU::class);
+        $market->installMarketeer(Disk::class);
         
         $data = $market->readItem($path);
         $response->getBody()->write($data);
@@ -37,5 +41,8 @@ require __DIR__ . '/../vendor/autoload.php';
         $response->getBody()->write($data);
         return $response->withHeader('Content-Type', 'application/json');
     });
-            
+        try {
             $app->run();
+        } catch (\Exception $e) {
+            echo "Exception: ".$e->getMessage();
+        }
