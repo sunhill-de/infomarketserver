@@ -41,8 +41,13 @@ require __DIR__ . '/../vendor/autoload.php';
         $response->getBody()->write($data);
         return $response->withHeader('Content-Type', 'application/json');
     });
+
+    $app->notFound(function () use ($app) {
+        $app->halt(404,json_encode(['status'=>'failed','error_code'=>'NOINTERFACE','error_message'=>'The REST interface is not defined.']));
+    }
+                   
         try {
             $app->run();
         } catch (\Exception $e) {
-            echo "Exception: ".$e->getMessage();
+            $app->halt(500,json_encode(['status'=>'failed','error_code'=>'EXCEPTION','error_message'=>'$e->getMessage()]));
         }
