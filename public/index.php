@@ -11,6 +11,8 @@ use Sunhill\InfoMarket\Marketeers\System\CPU;
 require __DIR__ . '/../vendor/autoload.php';
 
     $app = AppFactory::create();
+    
+    $errorMiddleware = $app->addErrorMiddleware(true, true, true);
         
     $app->get('/status', function (Request $request, Response $response, $args) {
         $data = json_encode(['result'=>'OK','status'=>'working']);
@@ -42,12 +44,5 @@ require __DIR__ . '/../vendor/autoload.php';
         return $response->withHeader('Content-Type', 'application/json');
     });
 
-    $app->notFound(function () use ($app) {
-        $app->halt(404,json_encode(['status'=>'failed','error_code'=>'NOINTERFACE','error_message'=>'The REST interface is not defined.']));
-    }
-                   
-        try {
-            $app->run();
-        } catch (\Exception $e) {
-            $app->halt(500,json_encode(['status'=>'failed','error_code'=>'EXCEPTION','error_message'=>'$e->getMessage()]));
-        }
+                    
+   $app->run();
